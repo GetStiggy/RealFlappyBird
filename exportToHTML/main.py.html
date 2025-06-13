@@ -1,0 +1,94 @@
+<html>
+<head>
+<title>main.py</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cf8e6d;}
+.s1 { color: #bcbec4;}
+.s2 { color: #bcbec4;}
+.s3 { color: #7a7e85;}
+.s4 { color: #6aab73;}
+</style>
+</head>
+<body bgcolor="#1e1f22">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+main.py</font>
+</center></td></tr></table>
+<pre><span class="s0">import </span><span class="s1">pygame </span><span class="s0">as </span><span class="s1">pg</span>
+<span class="s0">import </span><span class="s1">sys</span>
+<span class="s0">from </span><span class="s1">bird </span><span class="s0">import </span><span class="s2">*</span>
+<span class="s0">from </span><span class="s1">pipes </span><span class="s0">import </span><span class="s2">*</span>
+<span class="s0">from </span><span class="s1">game_objects </span><span class="s0">import </span><span class="s2">*</span>
+<span class="s0">from </span><span class="s1">settings </span><span class="s0">import </span><span class="s2">*</span>
+
+
+
+
+<span class="s0">class </span><span class="s1">RealFlappyBird</span><span class="s2">:</span>
+    <span class="s0">def </span><span class="s1">__init__</span><span class="s2">(</span><span class="s1">self</span><span class="s2">):</span>
+        <span class="s1">pg</span><span class="s2">.</span><span class="s1">init</span><span class="s2">()</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">screen </span><span class="s2">= </span><span class="s1">pg</span><span class="s2">.</span><span class="s1">display</span><span class="s2">.</span><span class="s1">set_mode</span><span class="s2">(</span><span class="s1">RES</span><span class="s2">)</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">clock </span><span class="s2">= </span><span class="s1">pg</span><span class="s2">.</span><span class="s1">time</span><span class="s2">.</span><span class="s1">Clock</span><span class="s2">()</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">load_assets</span><span class="s2">()</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">score </span><span class="s2">= </span><span class="s1">Score</span><span class="s2">(</span><span class="s1">self</span><span class="s2">)</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">new_game</span><span class="s2">()</span>
+
+    <span class="s0">def </span><span class="s1">load_assets</span><span class="s2">(</span><span class="s1">self</span><span class="s2">):</span>
+        <span class="s3"># bird</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">bird_images </span><span class="s2">= </span><span class="s1">pg</span><span class="s2">.</span><span class="s1">image</span><span class="s2">.</span><span class="s1">load</span><span class="s2">(</span><span class="s4">'C:/Users/cr8zy/PycharmProjects/PythonProject/assets/images/bird.png'</span><span class="s2">).</span><span class="s1">convert_alpha</span><span class="s2">()</span>
+        <span class="s1">bird_image </span><span class="s2">= </span><span class="s1">self</span><span class="s2">.</span><span class="s1">bird_images</span>
+        <span class="s1">bird_size </span><span class="s2">= </span><span class="s1">bird_image</span><span class="s2">.</span><span class="s1">get_width</span><span class="s2">() * </span><span class="s1">BIRD_SCALE</span><span class="s2">, </span><span class="s1">bird_image</span><span class="s2">.</span><span class="s1">get_height</span><span class="s2">() * </span><span class="s1">BIRD_SCALE</span>
+
+        <span class="s3"># background</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">background_image </span><span class="s2">= </span><span class="s1">pg</span><span class="s2">.</span><span class="s1">image</span><span class="s2">.</span><span class="s1">load</span><span class="s2">(</span><span class="s4">'C:/Users/cr8zy/PycharmProjects/PythonProject/assets/images/bg.jpg'</span><span class="s2">).</span><span class="s1">convert</span><span class="s2">()</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">background_image </span><span class="s2">= </span><span class="s1">pg</span><span class="s2">.</span><span class="s1">transform</span><span class="s2">.</span><span class="s1">scale</span><span class="s2">(</span><span class="s1">self</span><span class="s2">.</span><span class="s1">background_image</span><span class="s2">, </span><span class="s1">RES</span><span class="s2">)</span>
+        <span class="s3"># pipes</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">top_pipe_image </span><span class="s2">= </span><span class="s1">pg</span><span class="s2">.</span><span class="s1">image</span><span class="s2">.</span><span class="s1">load</span><span class="s2">(</span><span class="s4">'C:/Users/cr8zy/PycharmProjects/PythonProject/assets/images/top_pipe.png'</span><span class="s2">).</span><span class="s1">convert_alpha</span><span class="s2">()</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">top_pipe_image </span><span class="s2">= </span><span class="s1">pg</span><span class="s2">.</span><span class="s1">transform</span><span class="s2">.</span><span class="s1">scale</span><span class="s2">(</span><span class="s1">self</span><span class="s2">.</span><span class="s1">top_pipe_image</span><span class="s2">, (</span><span class="s1">PIPE_WIDTH</span><span class="s2">, </span><span class="s1">PIPE_HEIGHT</span><span class="s2">))</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">bottom_pipe_image </span><span class="s2">= </span><span class="s1">pg</span><span class="s2">.</span><span class="s1">transform</span><span class="s2">.</span><span class="s1">flip</span><span class="s2">(</span><span class="s1">self</span><span class="s2">.</span><span class="s1">top_pipe_image</span><span class="s2">, </span><span class="s0">False</span><span class="s2">, </span><span class="s0">True</span><span class="s2">)</span>
+
+    <span class="s0">def </span><span class="s1">new_game</span><span class="s2">(</span><span class="s1">self</span><span class="s2">):</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">all_sprites_group </span><span class="s2">= </span><span class="s1">pg</span><span class="s2">.</span><span class="s1">sprite</span><span class="s2">.</span><span class="s1">Group</span><span class="s2">()</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">pipe_group </span><span class="s2">= </span><span class="s1">pg</span><span class="s2">.</span><span class="s1">sprite</span><span class="s2">.</span><span class="s1">Group</span><span class="s2">()</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">bird </span><span class="s2">= </span><span class="s1">Bird</span><span class="s2">(</span><span class="s1">self</span><span class="s2">)</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">background </span><span class="s2">= </span><span class="s1">Background</span><span class="s2">(</span><span class="s1">self</span><span class="s2">)</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">pipe_handler </span><span class="s2">= </span><span class="s1">PipeHandler</span><span class="s2">(</span><span class="s1">self</span><span class="s2">)</span>
+
+    <span class="s0">def </span><span class="s1">draw</span><span class="s2">(</span><span class="s1">self</span><span class="s2">):</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">background</span><span class="s2">.</span><span class="s1">draw</span><span class="s2">()</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">all_sprites_group</span><span class="s2">.</span><span class="s1">draw</span><span class="s2">(</span><span class="s1">self</span><span class="s2">.</span><span class="s1">screen</span><span class="s2">)</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">score</span><span class="s2">.</span><span class="s1">draw</span><span class="s2">()</span>
+        <span class="s1">pg</span><span class="s2">.</span><span class="s1">display</span><span class="s2">.</span><span class="s1">flip</span><span class="s2">()</span>
+
+    <span class="s0">def </span><span class="s1">update</span><span class="s2">(</span><span class="s1">self</span><span class="s2">):</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">background</span><span class="s2">.</span><span class="s1">update</span><span class="s2">()</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">all_sprites_group</span><span class="s2">.</span><span class="s1">update</span><span class="s2">()</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">pipe_handler</span><span class="s2">.</span><span class="s1">update</span><span class="s2">()</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">clock</span><span class="s2">.</span><span class="s1">tick</span><span class="s2">(</span><span class="s1">FPS</span><span class="s2">)</span>
+
+    <span class="s0">def </span><span class="s1">check_events</span><span class="s2">(</span><span class="s1">self</span><span class="s2">):</span>
+        <span class="s0">for </span><span class="s1">event </span><span class="s0">in </span><span class="s1">pg</span><span class="s2">.</span><span class="s1">event</span><span class="s2">.</span><span class="s1">get</span><span class="s2">():</span>
+            <span class="s0">if </span><span class="s1">event</span><span class="s2">.</span><span class="s1">type </span><span class="s2">== </span><span class="s1">pg</span><span class="s2">.</span><span class="s1">QUIT</span><span class="s2">:</span>
+                <span class="s1">pg</span><span class="s2">.</span><span class="s1">quit</span><span class="s2">()</span>
+                <span class="s1">sys</span><span class="s2">.</span><span class="s1">exit</span><span class="s2">()</span>
+            <span class="s1">self</span><span class="s2">.</span><span class="s1">bird</span><span class="s2">.</span><span class="s1">check_event</span><span class="s2">(</span><span class="s1">event</span><span class="s2">)</span>
+
+    <span class="s0">def </span><span class="s1">run</span><span class="s2">(</span><span class="s1">self</span><span class="s2">):</span>
+        <span class="s0">while True</span><span class="s2">:</span>
+            <span class="s1">self</span><span class="s2">.</span><span class="s1">check_events</span><span class="s2">()</span>
+            <span class="s1">self</span><span class="s2">.</span><span class="s1">update</span><span class="s2">()</span>
+            <span class="s1">self</span><span class="s2">.</span><span class="s1">draw</span><span class="s2">()</span>
+
+
+<span class="s0">if </span><span class="s1">__name__ </span><span class="s2">== </span><span class="s4">'__main__'</span><span class="s2">:</span>
+    <span class="s1">game </span><span class="s2">= </span><span class="s1">RealFlappyBird</span><span class="s2">()</span>
+    <span class="s1">game</span><span class="s2">.</span><span class="s1">run</span><span class="s2">()</span>
+
+
+
+
+</pre>
+</body>
+</html>

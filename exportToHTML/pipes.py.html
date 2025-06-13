@@ -1,0 +1,77 @@
+<html>
+<head>
+<title>pipes.py</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cf8e6d;}
+.s1 { color: #bcbec4;}
+.s2 { color: #bcbec4;}
+.s3 { color: #2aacb8;}
+</style>
+</head>
+<body bgcolor="#1e1f22">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+pipes.py</font>
+</center></td></tr></table>
+<pre><span class="s0">import </span><span class="s1">pygame </span><span class="s0">as </span><span class="s1">pg</span>
+<span class="s0">from </span><span class="s1">settings </span><span class="s0">import </span><span class="s2">*</span>
+<span class="s0">import </span><span class="s1">random</span>
+
+
+<span class="s0">class </span><span class="s1">TopPipe</span><span class="s2">(</span><span class="s1">pg</span><span class="s2">.</span><span class="s1">sprite</span><span class="s2">.</span><span class="s1">Sprite</span><span class="s2">):</span>
+    <span class="s0">def </span><span class="s1">__init__</span><span class="s2">(</span><span class="s1">self</span><span class="s2">, </span><span class="s1">app</span><span class="s2">, </span><span class="s1">gap_y_pos</span><span class="s2">):</span>
+        <span class="s1">super</span><span class="s2">().</span><span class="s1">__init__</span><span class="s2">(</span><span class="s1">app</span><span class="s2">.</span><span class="s1">pipe_group</span><span class="s2">, </span><span class="s1">app</span><span class="s2">.</span><span class="s1">all_sprites_group</span><span class="s2">)</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">image </span><span class="s2">= </span><span class="s1">app</span><span class="s2">.</span><span class="s1">top_pipe_image</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">mask </span><span class="s2">= </span><span class="s1">pg</span><span class="s2">.</span><span class="s1">mask</span><span class="s2">.</span><span class="s1">from_surface</span><span class="s2">(</span><span class="s1">self</span><span class="s2">.</span><span class="s1">image</span><span class="s2">)</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">rect </span><span class="s2">= </span><span class="s1">self</span><span class="s2">.</span><span class="s1">image</span><span class="s2">.</span><span class="s1">get_rect</span><span class="s2">()</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">rect</span><span class="s2">.</span><span class="s1">bottomleft </span><span class="s2">= </span><span class="s1">WIDTH</span><span class="s2">, </span><span class="s1">gap_y_pos </span><span class="s2">- </span><span class="s1">HALF_GAP_HEIGHT </span><span class="s2">- </span><span class="s1">GROUND_HEIGHT</span>
+
+    <span class="s0">def </span><span class="s1">update</span><span class="s2">(</span><span class="s1">self</span><span class="s2">):</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">rect</span><span class="s2">.</span><span class="s1">left </span><span class="s2">-= </span><span class="s1">SCROLL_SPEED</span>
+        <span class="s0">if </span><span class="s1">self</span><span class="s2">.</span><span class="s1">rect</span><span class="s2">.</span><span class="s1">right </span><span class="s2">&lt; </span><span class="s3">0</span><span class="s2">:</span>
+            <span class="s1">self</span><span class="s2">.</span><span class="s1">kill</span><span class="s2">()</span>
+
+
+<span class="s0">class </span><span class="s1">BottomPipe</span><span class="s2">(</span><span class="s1">TopPipe</span><span class="s2">):</span>
+    <span class="s0">def </span><span class="s1">__init__</span><span class="s2">(</span><span class="s1">self</span><span class="s2">, </span><span class="s1">app</span><span class="s2">, </span><span class="s1">gap_y_pos</span><span class="s2">):</span>
+        <span class="s1">super</span><span class="s2">().</span><span class="s1">__init__</span><span class="s2">(</span><span class="s1">app</span><span class="s2">, </span><span class="s1">gap_y_pos</span><span class="s2">)</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">image </span><span class="s2">= </span><span class="s1">app</span><span class="s2">.</span><span class="s1">bottom_pipe_image</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">rect</span><span class="s2">.</span><span class="s1">topleft </span><span class="s2">= </span><span class="s1">WIDTH</span><span class="s2">, </span><span class="s1">gap_y_pos </span><span class="s2">+ </span><span class="s1">HALF_GAP_HEIGHT </span><span class="s2">- </span><span class="s1">GROUND_HEIGHT</span>
+
+
+<span class="s0">class </span><span class="s1">PipeHandler</span><span class="s2">:</span>
+    <span class="s0">def </span><span class="s1">__init__</span><span class="s2">(</span><span class="s1">self</span><span class="s2">, </span><span class="s1">game</span><span class="s2">):</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">game </span><span class="s2">= </span><span class="s1">game</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">pipe_dist </span><span class="s2">= </span><span class="s1">DIST_BETWEEN_PIPES</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">pipes </span><span class="s2">= []</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">passed_pipes </span><span class="s2">= </span><span class="s3">0</span>
+
+    <span class="s0">def </span><span class="s1">count_passed_pipes</span><span class="s2">(</span><span class="s1">self</span><span class="s2">):</span>
+        <span class="s0">for </span><span class="s1">pipe </span><span class="s0">in </span><span class="s1">self</span><span class="s2">.</span><span class="s1">pipes</span><span class="s2">:</span>
+            <span class="s0">if </span><span class="s1">BIRD_POS</span><span class="s2">[</span><span class="s3">0</span><span class="s2">] &gt; </span><span class="s1">pipe</span><span class="s2">.</span><span class="s1">rect</span><span class="s2">.</span><span class="s1">right</span><span class="s2">:</span>
+
+                <span class="s1">self</span><span class="s2">.</span><span class="s1">passed_pipes </span><span class="s2">+= </span><span class="s3">1</span>
+                <span class="s1">self</span><span class="s2">.</span><span class="s1">pipes</span><span class="s2">.</span><span class="s1">remove</span><span class="s2">(</span><span class="s1">pipe</span><span class="s2">)</span>
+
+    <span class="s0">def </span><span class="s1">update</span><span class="s2">(</span><span class="s1">self</span><span class="s2">):</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">generate_pipes</span><span class="s2">()</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">count_passed_pipes</span><span class="s2">()</span>
+
+    <span class="s2">@</span><span class="s1">staticmethod</span>
+    <span class="s0">def </span><span class="s1">get_gap_y_position</span><span class="s2">():</span>
+        <span class="s0">return </span><span class="s1">random</span><span class="s2">.</span><span class="s1">randint</span><span class="s2">(</span><span class="s1">GAP_HEIGHT</span><span class="s2">, </span><span class="s1">HEIGHT </span><span class="s2">- </span><span class="s1">GAP_HEIGHT</span><span class="s2">)</span>
+
+    <span class="s0">def </span><span class="s1">generate_pipes</span><span class="s2">(</span><span class="s1">self</span><span class="s2">):</span>
+        <span class="s0">if </span><span class="s1">self</span><span class="s2">.</span><span class="s1">game</span><span class="s2">.</span><span class="s1">bird</span><span class="s2">.</span><span class="s1">first_jump</span><span class="s2">:</span>
+            <span class="s1">self</span><span class="s2">.</span><span class="s1">pipe_dist </span><span class="s2">+= </span><span class="s1">SCROLL_SPEED</span>
+            <span class="s0">if </span><span class="s1">self</span><span class="s2">.</span><span class="s1">pipe_dist </span><span class="s2">&gt; </span><span class="s1">DIST_BETWEEN_PIPES</span><span class="s2">:</span>
+                <span class="s1">self</span><span class="s2">.</span><span class="s1">pipe_dist </span><span class="s2">= </span><span class="s3">0</span>
+                <span class="s1">gap_y </span><span class="s2">= </span><span class="s1">self</span><span class="s2">.</span><span class="s1">get_gap_y_position</span><span class="s2">()</span>
+
+                <span class="s1">TopPipe</span><span class="s2">(</span><span class="s1">self</span><span class="s2">.</span><span class="s1">game</span><span class="s2">, </span><span class="s1">gap_y</span><span class="s2">)</span>
+                <span class="s1">pipe </span><span class="s2">= </span><span class="s1">BottomPipe</span><span class="s2">(</span><span class="s1">self</span><span class="s2">.</span><span class="s1">game</span><span class="s2">, </span><span class="s1">gap_y</span><span class="s2">)</span>
+                <span class="s1">self</span><span class="s2">.</span><span class="s1">pipes</span><span class="s2">.</span><span class="s1">append</span><span class="s2">(</span><span class="s1">pipe</span><span class="s2">)</span></pre>
+</body>
+</html>

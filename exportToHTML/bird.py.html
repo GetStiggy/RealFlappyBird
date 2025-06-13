@@ -1,0 +1,76 @@
+<html>
+<head>
+<title>bird.py</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cf8e6d;}
+.s1 { color: #bcbec4;}
+.s2 { color: #bcbec4;}
+.s3 { color: #2aacb8;}
+.s4 { color: #7a7e85;}
+</style>
+</head>
+<body bgcolor="#1e1f22">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+bird.py</font>
+</center></td></tr></table>
+<pre><span class="s0">import </span><span class="s1">pygame </span><span class="s0">as </span><span class="s1">pg</span>
+<span class="s0">from </span><span class="s1">settings </span><span class="s0">import </span><span class="s2">*</span>
+<span class="s0">from </span><span class="s1">collections </span><span class="s0">import </span><span class="s1">deque</span>
+
+
+<span class="s0">class </span><span class="s1">Bird</span><span class="s2">(</span><span class="s1">pg</span><span class="s2">.</span><span class="s1">sprite</span><span class="s2">.</span><span class="s1">Sprite</span><span class="s2">):</span>
+    <span class="s0">def </span><span class="s1">__init__</span><span class="s2">(</span><span class="s1">self</span><span class="s2">, </span><span class="s1">game</span><span class="s2">):</span>
+        <span class="s1">super</span><span class="s2">().</span><span class="s1">__init__</span><span class="s2">(</span><span class="s1">game</span><span class="s2">.</span><span class="s1">all_sprites_group</span><span class="s2">)</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">game </span><span class="s2">= </span><span class="s1">game</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">image </span><span class="s2">= </span><span class="s1">game</span><span class="s2">.</span><span class="s1">bird_images</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">rect </span><span class="s2">= </span><span class="s1">self</span><span class="s2">.</span><span class="s1">image</span><span class="s2">.</span><span class="s1">get_rect</span><span class="s2">()</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">rect</span><span class="s2">.</span><span class="s1">center </span><span class="s2">= </span><span class="s1">BIRD_POS</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">animation_event </span><span class="s2">= </span><span class="s1">pg</span><span class="s2">.</span><span class="s1">USEREVENT </span><span class="s2">+ </span><span class="s3">0</span>
+
+
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">falling_velocity </span><span class="s2">= </span><span class="s3">0</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">first_jump </span><span class="s2">= </span><span class="s0">False</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">angle </span><span class="s2">= </span><span class="s3">0</span>
+
+    <span class="s0">def </span><span class="s1">check_collision</span><span class="s2">(</span><span class="s1">self</span><span class="s2">):</span>
+        <span class="s1">hit </span><span class="s2">= </span><span class="s1">pg</span><span class="s2">.</span><span class="s1">sprite</span><span class="s2">.</span><span class="s1">spritecollide</span><span class="s2">(</span><span class="s1">self</span><span class="s2">, </span><span class="s1">self</span><span class="s2">.</span><span class="s1">game</span><span class="s2">.</span><span class="s1">pipe_group</span><span class="s2">, </span><span class="s1">dokill</span><span class="s2">=</span><span class="s0">False</span><span class="s2">,</span>
+                                      <span class="s1">collided</span><span class="s2">=</span><span class="s1">pg</span><span class="s2">.</span><span class="s1">sprite</span><span class="s2">.</span><span class="s1">collide_mask</span><span class="s2">)</span>
+        <span class="s0">if </span><span class="s1">hit </span><span class="s0">or </span><span class="s1">self</span><span class="s2">.</span><span class="s1">rect</span><span class="s2">.</span><span class="s1">bottom </span><span class="s2">&gt; </span><span class="s1">GROUND_Y </span><span class="s0">or </span><span class="s1">self</span><span class="s2">.</span><span class="s1">rect</span><span class="s2">.</span><span class="s1">top </span><span class="s2">&lt; -</span><span class="s1">self</span><span class="s2">.</span><span class="s1">image</span><span class="s2">.</span><span class="s1">get_height</span><span class="s2">():</span>
+            <span class="s1">pg</span><span class="s2">.</span><span class="s1">time</span><span class="s2">.</span><span class="s1">wait</span><span class="s2">(</span><span class="s3">1000</span><span class="s2">)</span>
+            <span class="s1">self</span><span class="s2">.</span><span class="s1">game</span><span class="s2">.</span><span class="s1">new_game</span><span class="s2">()</span>
+
+    <span class="s0">def </span><span class="s1">rotate</span><span class="s2">(</span><span class="s1">self</span><span class="s2">):</span>
+        <span class="s0">if </span><span class="s1">self</span><span class="s2">.</span><span class="s1">first_jump</span><span class="s2">:</span>
+            <span class="s0">if </span><span class="s1">self</span><span class="s2">.</span><span class="s1">falling_velocity </span><span class="s2">&lt; -</span><span class="s1">BIRD_JUMP_VALUE</span><span class="s2">:</span>
+                <span class="s1">self</span><span class="s2">.</span><span class="s1">angle </span><span class="s2">= </span><span class="s1">BIRD_JUMP_ANGLE</span>
+            <span class="s0">else</span><span class="s2">:</span>
+                <span class="s1">self</span><span class="s2">.</span><span class="s1">angle </span><span class="s2">= </span><span class="s1">max</span><span class="s2">(-</span><span class="s3">2.5 </span><span class="s2">* </span><span class="s1">self</span><span class="s2">.</span><span class="s1">falling_velocity</span><span class="s2">, -</span><span class="s3">90</span><span class="s2">)</span>
+            <span class="s1">self</span><span class="s2">.</span><span class="s1">image </span><span class="s2">= </span><span class="s1">pg</span><span class="s2">.</span><span class="s1">transform</span><span class="s2">.</span><span class="s1">rotate</span><span class="s2">(</span><span class="s1">self</span><span class="s2">.</span><span class="s1">image</span><span class="s2">, </span><span class="s1">self</span><span class="s2">.</span><span class="s1">angle</span><span class="s2">)</span>
+            <span class="s4"># new mask</span>
+            <span class="s1">mask_image </span><span class="s2">= </span><span class="s1">pg</span><span class="s2">.</span><span class="s1">transform</span><span class="s2">.</span><span class="s1">rotate</span><span class="s2">(</span><span class="s1">self</span><span class="s2">.</span><span class="s1">game</span><span class="s2">.</span><span class="s1">mask_image</span><span class="s2">, </span><span class="s1">self</span><span class="s2">.</span><span class="s1">angle</span><span class="s2">)</span>
+            <span class="s1">self</span><span class="s2">.</span><span class="s1">mask </span><span class="s2">= </span><span class="s1">pg</span><span class="s2">.</span><span class="s1">mask</span><span class="s2">.</span><span class="s1">from_surface</span><span class="s2">(</span><span class="s1">mask_image</span><span class="s2">)</span>
+
+    <span class="s0">def </span><span class="s1">jump</span><span class="s2">(</span><span class="s1">self</span><span class="s2">):</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">first_jump </span><span class="s2">= </span><span class="s0">True</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">falling_velocity </span><span class="s2">= </span><span class="s1">BIRD_JUMP_VALUE</span>
+
+    <span class="s0">def </span><span class="s1">use_gravity</span><span class="s2">(</span><span class="s1">self</span><span class="s2">):</span>
+        <span class="s0">if </span><span class="s1">self</span><span class="s2">.</span><span class="s1">first_jump</span><span class="s2">:</span>
+            <span class="s1">self</span><span class="s2">.</span><span class="s1">falling_velocity </span><span class="s2">+= </span><span class="s1">GRAVITY</span>
+            <span class="s1">self</span><span class="s2">.</span><span class="s1">rect</span><span class="s2">.</span><span class="s1">y </span><span class="s2">+= </span><span class="s1">self</span><span class="s2">.</span><span class="s1">falling_velocity </span><span class="s2">+ </span><span class="s3">0.5 </span><span class="s2">* </span><span class="s1">GRAVITY</span>
+
+    <span class="s0">def </span><span class="s1">update</span><span class="s2">(</span><span class="s1">self</span><span class="s2">):</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">check_collision</span><span class="s2">()</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">use_gravity</span><span class="s2">()</span>
+
+    <span class="s0">def </span><span class="s1">check_event</span><span class="s2">(</span><span class="s1">self</span><span class="s2">, </span><span class="s1">event</span><span class="s2">):</span>
+        <span class="s0">if </span><span class="s1">event</span><span class="s2">.</span><span class="s1">type </span><span class="s2">== </span><span class="s1">self</span><span class="s2">.</span><span class="s1">animation_event</span><span class="s2">:</span>
+            <span class="s1">self</span><span class="s2">.</span><span class="s1">rotate</span><span class="s2">()</span>
+        <span class="s0">if </span><span class="s1">event</span><span class="s2">.</span><span class="s1">type </span><span class="s2">== </span><span class="s1">pg</span><span class="s2">.</span><span class="s1">MOUSEBUTTONDOWN</span><span class="s2">:</span>
+            <span class="s0">if </span><span class="s1">event</span><span class="s2">.</span><span class="s1">button </span><span class="s2">== </span><span class="s3">1</span><span class="s2">:</span>
+                <span class="s1">self</span><span class="s2">.</span><span class="s1">jump</span><span class="s2">()</span></pre>
+</body>
+</html>

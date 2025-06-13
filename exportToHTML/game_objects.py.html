@@ -1,0 +1,51 @@
+<html>
+<head>
+<title>game_objects.py</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cf8e6d;}
+.s1 { color: #bcbec4;}
+.s2 { color: #bcbec4;}
+.s3 { color: #6aab73;}
+.s4 { color: #2aacb8;}
+</style>
+</head>
+<body bgcolor="#1e1f22">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+game_objects.py</font>
+</center></td></tr></table>
+<pre><span class="s0">import </span><span class="s1">pygame </span><span class="s0">as </span><span class="s1">pg</span>
+<span class="s0">from </span><span class="s1">settings </span><span class="s0">import </span><span class="s2">*</span>
+
+
+<span class="s0">class </span><span class="s1">Score</span><span class="s2">:</span>
+    <span class="s0">def </span><span class="s1">__init__</span><span class="s2">(</span><span class="s1">self</span><span class="s2">, </span><span class="s1">game</span><span class="s2">):</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">game </span><span class="s2">= </span><span class="s1">game</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">font </span><span class="s2">= </span><span class="s1">pg</span><span class="s2">.</span><span class="s1">font</span><span class="s2">.</span><span class="s1">Font</span><span class="s2">(</span><span class="s3">'C:/Users/cr8zy/PycharmProjects/PythonProject/assets/font/doom.ttf'</span><span class="s2">, </span><span class="s4">150</span><span class="s2">)</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">font_pos </span><span class="s2">= (</span><span class="s1">WIDTH </span><span class="s2">// </span><span class="s4">2</span><span class="s2">, </span><span class="s1">HEIGHT </span><span class="s2">// </span><span class="s4">8</span><span class="s2">)</span>
+
+    <span class="s0">def </span><span class="s1">draw</span><span class="s2">(</span><span class="s1">self</span><span class="s2">):</span>
+        <span class="s1">score </span><span class="s2">= </span><span class="s1">self</span><span class="s2">.</span><span class="s1">game</span><span class="s2">.</span><span class="s1">pipe_handler</span><span class="s2">.</span><span class="s1">passed_pipes</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">text </span><span class="s2">= </span><span class="s1">self</span><span class="s2">.</span><span class="s1">font</span><span class="s2">.</span><span class="s1">render</span><span class="s2">(</span><span class="s3">f'</span><span class="s0">{</span><span class="s1">score</span><span class="s0">}</span><span class="s3">'</span><span class="s2">, </span><span class="s0">True</span><span class="s2">, </span><span class="s3">'white'</span><span class="s2">)</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">game</span><span class="s2">.</span><span class="s1">screen</span><span class="s2">.</span><span class="s1">blit</span><span class="s2">(</span><span class="s1">self</span><span class="s2">.</span><span class="s1">text</span><span class="s2">, </span><span class="s1">self</span><span class="s2">.</span><span class="s1">font_pos</span><span class="s2">)</span>
+
+<span class="s0">class </span><span class="s1">Background</span><span class="s2">:</span>
+    <span class="s0">def </span><span class="s1">__init__</span><span class="s2">(</span><span class="s1">self</span><span class="s2">, </span><span class="s1">game</span><span class="s2">):</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">game </span><span class="s2">= </span><span class="s1">game</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">x </span><span class="s2">= </span><span class="s4">0</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">y </span><span class="s2">= </span><span class="s4">0</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">speed </span><span class="s2">= </span><span class="s1">SCROLL_SPEED </span><span class="s2">- </span><span class="s4">2</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">image </span><span class="s2">= </span><span class="s1">self</span><span class="s2">.</span><span class="s1">game</span><span class="s2">.</span><span class="s1">background_image</span>
+
+    <span class="s0">def </span><span class="s1">update</span><span class="s2">(</span><span class="s1">self</span><span class="s2">):</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">x </span><span class="s2">= (</span><span class="s1">self</span><span class="s2">.</span><span class="s1">x </span><span class="s2">- </span><span class="s1">self</span><span class="s2">.</span><span class="s1">speed</span><span class="s2">) % -</span><span class="s1">WIDTH</span>
+
+
+    <span class="s0">def </span><span class="s1">draw</span><span class="s2">(</span><span class="s1">self</span><span class="s2">):</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">game</span><span class="s2">.</span><span class="s1">screen</span><span class="s2">.</span><span class="s1">blit</span><span class="s2">(</span><span class="s1">self</span><span class="s2">.</span><span class="s1">image</span><span class="s2">, (</span><span class="s1">self</span><span class="s2">.</span><span class="s1">x</span><span class="s2">, </span><span class="s1">self</span><span class="s2">.</span><span class="s1">y</span><span class="s2">))</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">game</span><span class="s2">.</span><span class="s1">screen</span><span class="s2">.</span><span class="s1">blit</span><span class="s2">(</span><span class="s1">self</span><span class="s2">.</span><span class="s1">image</span><span class="s2">, (</span><span class="s1">WIDTH </span><span class="s2">+ </span><span class="s1">self</span><span class="s2">.</span><span class="s1">x</span><span class="s2">, </span><span class="s1">self</span><span class="s2">.</span><span class="s1">y</span><span class="s2">))</span>
+</pre>
+</body>
+</html>
