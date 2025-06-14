@@ -19,15 +19,15 @@ class RealFlappyBird:
 
     def load_assets(self):
         # bird
-        self.bird_images = pg.image.load('C:/Users/cr8zy/PycharmProjects/PythonProject/assets/images/bird.png').convert_alpha()
+        self.bird_images = pg.image.load('PythonProject/assets/images/bird.png').convert_alpha()
         bird_image = self.bird_images
         bird_size = bird_image.get_width() * BIRD_SCALE, bird_image.get_height() * BIRD_SCALE
 
         # background
-        self.background_image = pg.image.load('C:/Users/cr8zy/PycharmProjects/PythonProject/assets/images/bg.jpg').convert()
+        self.background_image = pg.image.load('PythonProject/assets/images/bg.jpg').convert()
         self.background_image = pg.transform.scale(self.background_image, RES)
         # pipes
-        self.top_pipe_image = pg.image.load('C:/Users/cr8zy/PycharmProjects/PythonProject/assets/images/top_pipe.png').convert_alpha()
+        self.top_pipe_image = pg.image.load('PythonProject/assets/images/top_pipe.png').convert_alpha()
         self.top_pipe_image = pg.transform.scale(self.top_pipe_image, (PIPE_WIDTH, PIPE_HEIGHT))
         self.bottom_pipe_image = pg.transform.flip(self.top_pipe_image, False, True)
 
